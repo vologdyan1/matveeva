@@ -33,6 +33,70 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="preload" href="css/style.min.css" as="style">
   <link rel="stylesheet" href="css/style.min.css">
+  <style>
+    .services-supervision {
+      margin-top: 32px;
+      max-width: 52rem;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .services-supervision__items {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    .services-supervision__details {
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding-top: 16px;
+      margin-top: 24px;
+    }
+
+    .services-supervision__summary {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      cursor: default;
+      list-style: none;
+      padding: 0;
+      margin-left: 0;
+    }
+
+    .services-supervision__summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .services-supervision__title {
+      margin: 0;
+      font-size: 2.1rem;
+      font-weight: 600;
+    }
+
+    .services-supervision__summary-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      font-size: 20px;
+      line-height: 1;
+      transition: transform 0.2s ease;
+    }
+
+    .services-supervision__details[open] .services-supervision__summary-icon {
+      transform: rotate(45deg);
+    }
+
+    .services-supervision__text {
+      margin-top: 16px;
+    }
+  </style>
 </head>
 <body class="page">
   <a class="skip-link" href="#main-content">Перейти к основному содержимому</a>
@@ -114,8 +178,26 @@
           </div>
         </div>
         <div class="services-supervision">
-          <h3 class="services-supervision__title">Авторский надзор</h3>
-          <p class="services-supervision__text">Это сопровождение ремонта по вашему проекту: дизайнер выезжает на объект, проверяет соответствие работ чертежам, подбор материалов и отделки, помогает подрядчикам избежать ошибок и вовремя скорректировать недочёты. Так результат ремонта совпадает с визуализацией, а вы экономите нервы и бюджет. Стоимость — <strong>от 25 000 руб.</strong></p>
+          <div class="services-supervision__items">
+            <div class="services-supervision__details">
+              <div class="services-supervision__summary">
+                <h3 class="services-supervision__title">
+                  <span class="services-supervision__summary-icon" aria-hidden="true">+</span>
+                  <span class="services-supervision__summary-label">Полная комплектация и смета под ваш бюджет</span>
+                </h3>
+              </div>
+              <p class="services-supervision__text">Комплектация — это сопровождение закупок по утверждённому дизайн-проекту: подбор материалов, мебели, света и декора с учётом бюджета и сроков, подготовка спецификаций с артикулами и актуальными ценами, оформление заказов и координация поставщиков. Вы получаете готовые подборки и собранные корзины без необходимости самостоятельно ездить по салонам и часами искать аналоги в интернете. Комплектация включает в себя авторский надзор.</p>
+            </div>
+            <div class="services-supervision__details">
+              <div class="services-supervision__summary">
+                <h3 class="services-supervision__title">
+                  <span class="services-supervision__summary-icon" aria-hidden="true">+</span>
+                  <span class="services-supervision__summary-label">Авторский надзор</span>
+                </h3>
+              </div>
+              <p class="services-supervision__text">Это сопровождение ремонта по вашему проекту: дизайнер выезжает на объект, проверяет соответствие работ чертежам, подбор материалов и отделки, помогает подрядчикам избежать ошибок и вовремя скорректировать недочёты. Так результат ремонта совпадает с визуализацией, а вы экономите нервы и бюджет. Стоимость — <strong>от 25 000 руб.</strong></p>
+            </div>
+          </div>
           <div class="services-supervision__actions">
             <a class="btn btn--primary js-open-consult" href="#consult-modal" tabindex="0" aria-label="Получить консультацию" aria-haspopup="dialog">Получить консультацию</a>
           </div>
