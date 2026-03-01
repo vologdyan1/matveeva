@@ -20,6 +20,9 @@ html {
 body {
   min-height: 100vh;
   line-height: 1.5;
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--text-color);
 }
 
 img,
@@ -48,10 +51,10 @@ a {
   text-decoration: none;
 }
 
-/* ===== Typography & design tokens ===== */
+/* ===== Design tokens ===== */
 :root {
-  --font-heading: "Cormorant Garamond", "Georgia", serif;
-  --font-body: "Montserrat", "Arial", sans-serif;
+  --font-heading: "Cormorant Garamond", "Times New Roman", serif;
+  --font-body: "Montserrat", system-ui, sans-serif;
   --text-color: #1a1a1a;
   --text-muted: #555;
   --accent: #1a1a1a;
@@ -74,12 +77,6 @@ a {
   --micro-ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-body {
-  font-family: var(--font-body);
-  font-weight: 400;
-  color: var(--text-color);
-}
-
 h1, h2, h3 {
   font-family: var(--font-heading);
   font-weight: 600;
@@ -90,11 +87,6 @@ h1, h2, h3 {
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   margin-bottom: 0.5em;
   text-align: left;
-}
-
-.section__lead {
-  font-size: 1rem;
-  color: var(--text-muted);
 }
 
 /* ===== Skip link (a11y) ===== */
@@ -192,9 +184,6 @@ h1, h2, h3 {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-color);
-}
-
-.page-header__brand {
   transition: opacity var(--micro-duration) var(--micro-ease);
 }
 
@@ -308,16 +297,13 @@ h1, h2, h3 {
 .nav-list__link {
   font-size: 0.875rem;
   font-weight: 500;
+  transition: color var(--micro-duration) var(--micro-ease), opacity var(--micro-duration) var(--micro-ease);
 }
 
 @media (min-width: 768px) {
   .nav-list__link {
     font-size: 0.9375rem;
   }
-}
-
-.nav-list__link {
-  transition: color var(--micro-duration) var(--micro-ease), opacity var(--micro-duration) var(--micro-ease);
 }
 
 .nav-list__link:hover,
@@ -486,19 +472,6 @@ h1, h2, h3 {
   border-color: #fff;
 }
 
-.btn--outline {
-  background: transparent;
-  color: var(--text-color);
-  border-color: var(--accent);
-}
-
-.btn--outline:hover,
-.btn--outline:focus-visible {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-
 /* ===== Services (4 тарифа по ширине) ===== */
 #services {
   scroll-margin-top: var(--header-height);
@@ -532,20 +505,20 @@ h1, h2, h3 {
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
-@media (max-width: 899px) {
+@media (min-width: 480px) {
   .services-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 479px) {
+@media (min-width: 900px) {
   .services-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -574,46 +547,6 @@ h1, h2, h3 {
   border-radius: var(--radius-md);
 }
 
-.services-included {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-@media (min-width: 600px) {
-  .services-included {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-  }
-}
-
-.services-included__card {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: #f8f8f8;
-}
-
-.services-included__card img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-  cursor: pointer;
-}
-
-.services-included__card img:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.services-included__label {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
-  text-align: center;
-}
 
 .services-supervision {
   margin-top: 2rem;
@@ -777,7 +710,6 @@ h1, h2, h3 {
   list-style: none;
   transition: transform 0.35s ease-out;
   gap: 0.75rem;
-  will-change: transform;
 }
 
 /* 4 превью в ряд на узких экранах */
@@ -1307,8 +1239,6 @@ h1, h2, h3 {
   inset: 0;
   cursor: pointer;
   background: rgba(26, 26, 26, 0.35);
-  backdrop-filter: blur(0);
-  -webkit-backdrop-filter: blur(0);
   transition: backdrop-filter 0.35s ease-out, -webkit-backdrop-filter 0.35s ease-out;
 }
 
@@ -1589,10 +1519,6 @@ h1, h2, h3 {
   word-break: break-all;
 }
 
-.contacts-cta__btn {
-  min-width: 12rem;
-}
-
 /* ===== Footer ===== */
 .page-footer {
   padding-top: 2rem;
@@ -1852,8 +1778,6 @@ h1, h2, h3 {
   position: absolute;
   inset: 0;
   background: rgba(26, 26, 26, 0.35);
-  backdrop-filter: blur(0);
-  -webkit-backdrop-filter: blur(0);
   transition: backdrop-filter 0.4s ease-out, -webkit-backdrop-filter 0.4s ease-out;
 }
 

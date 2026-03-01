@@ -14,6 +14,7 @@
   <meta property="og:title" content="Дизайн интерьеров — MATVEEVA DESIGN">
   <meta property="og:description" content="Продуманный интерьер под ключ: от концепции и 3D до авторского надзора. Более 400 реализованных проектов по всей России.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://matveeva-design.pro/">
   <!-- Замените matveeva-design.pro на ваш домен, если нужен другой URL для шеринга -->
   <meta property="og:image" content="https://matveeva-design.pro/assets/project-03.png">
   <meta property="og:locale" content="ru_RU">
@@ -29,8 +30,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap"></noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=block">
   <link rel="preload" href="css/style.min.css" as="style">
   <link rel="preload" href="assets/projects/project-01/08.webp" as="image">
   <link rel="stylesheet" href="css/style.min.css">
@@ -38,10 +38,10 @@
 <body class="page">
   <a class="skip-link" href="#main-content">Перейти к основному содержимому</a>
 
-  <header class="page-header" role="banner">
+  <header class="page-header">
     <div class="container page-header__inner">
       <a class="page-header__brand" href="#hero" aria-label="На главную — MATVEEVA DESIGN">MATVEEVA DESIGN</a>
-      <button type="button" class="page-header__burger" aria-expanded="false" aria-controls="page-header-nav" aria-label="Открыть меню" tabindex="0">
+      <button type="button" class="page-header__burger" aria-expanded="false" aria-controls="page-header-nav" aria-label="Открыть меню">
         <span class="page-header__burger-line" aria-hidden="true"></span>
         <span class="page-header__burger-line" aria-hidden="true"></span>
         <span class="page-header__burger-line" aria-hidden="true"></span>
@@ -58,7 +58,7 @@
     </div>
   </header>
 
-  <main id="main-content" class="page-main" role="main">
+  <main id="main-content" class="page-main">
     <section id="hero" class="hero section" aria-labelledby="hero-title">
       <div class="hero__bg" aria-hidden="true"></div>
       <div class="container hero__container">
@@ -77,7 +77,7 @@
       <div class="container">
         <h2 id="services-title" class="section__title">Услуги</h2>
         <div class="services-grid" role="list" aria-label="Тарифы дизайн-проекта">
-          <div class="services-grid__item">
+          <div class="services-grid__item" role="listitem">
             <div class="services-grid__card">
               <picture>
                 <source type="image/webp" srcset="assets/service-01.webp">
@@ -86,7 +86,7 @@
             </div>
             <a class="btn btn--primary services-grid__btn js-open-included" href="#" aria-label="Что входит в проект — тариф 1700 руб./кв. м" data-included-src="assets/included-tariff-01.png" data-included-alt="Что входит в стоимость — тариф 1700 руб./кв. м">Что входит в проект</a>
           </div>
-          <div class="services-grid__item">
+          <div class="services-grid__item" role="listitem">
             <div class="services-grid__card">
               <picture>
                 <source type="image/webp" srcset="assets/service-02.webp">
@@ -95,7 +95,7 @@
             </div>
             <a class="btn btn--primary services-grid__btn js-open-included" href="#" aria-label="Что входит в проект — тариф 2100 руб./кв. м" data-included-src="assets/included-tariff-02.png" data-included-alt="Что входит в стоимость — тариф 2100 руб./кв. м">Что входит в проект</a>
           </div>
-          <div class="services-grid__item">
+          <div class="services-grid__item" role="listitem">
             <div class="services-grid__card">
               <picture>
                 <source type="image/webp" srcset="assets/service-03.webp">
@@ -104,7 +104,7 @@
             </div>
             <a class="btn btn--primary services-grid__btn js-open-included" href="#" aria-label="Что входит в проект — тариф 2700 руб./кв. м" data-included-src="assets/included-tariff-03.png" data-included-alt="Что входит в стоимость — тариф 2700 руб./кв. м">Что входит в проект</a>
           </div>
-          <div class="services-grid__item">
+          <div class="services-grid__item" role="listitem">
             <div class="services-grid__card">
               <picture>
                 <source type="image/webp" srcset="assets/service-04.webp">
@@ -350,7 +350,7 @@
     </section>
   </main>
 
-  <footer class="page-footer" role="contentinfo">
+  <footer class="page-footer">
     <div class="container page-footer__inner">
       <div class="page-footer__top">
         <a class="page-footer__brand" href="#hero" aria-label="На главную — MATVEEVA DESIGN">MATVEEVA DESIGN</a>
