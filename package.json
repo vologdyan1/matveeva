@@ -4,8 +4,9 @@
   "scripts": {
     "carousel-thumbs": "node scripts/generate-carousel-thumbs.js",
     "landing-webp": "node scripts/generate-landing-webp.js",
+    "projects-webp": "node scripts/generate-projects-webp.js",
     "minify": "npx clean-css-cli -o css/style.min.css css/style.css && npx terser js/script.js -o js/script.min.js -c -m",
-    "build": "npm run landing-webp && npm run minify"
+    "build": "npm run landing-webp && npm run projects-webp && npm run minify"
   },
   "devDependencies": {
     "sharp": "^0.33.5"

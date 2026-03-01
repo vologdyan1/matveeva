@@ -22,9 +22,9 @@
   <meta name="twitter:description" content="Интерьеры под ключ в Новосибирске и по всей России.">
   <meta name="twitter:image" content="https://matveeva-design.pro/assets/project-03.png">
 
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/MD%2032x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/MD%2016x16.png">
-  <link rel="apple-touch-icon" href="assets/MD%20180x180.png" sizes="180x180">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/MD-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/MD-16x16.png">
+  <link rel="apple-touch-icon" href="assets/MD-180x180.png" sizes="180x180">
 
   <!-- Preload hero убран: на медленном мобильном связке сначала грузим документ и CSS -->
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" as="style">
@@ -33,70 +33,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="preload" href="css/style.min.css" as="style">
   <link rel="stylesheet" href="css/style.min.css">
-  <style>
-    .services-supervision {
-      margin-top: 32px;
-      max-width: 52rem;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-    }
-
-    .services-supervision__items {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      margin-bottom: 16px;
-    }
-
-    .services-supervision__details {
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
-      padding-top: 16px;
-      margin-top: 24px;
-    }
-
-    .services-supervision__summary {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      justify-content: center;
-      cursor: default;
-      list-style: none;
-      padding: 0;
-      margin-left: 0;
-    }
-
-    .services-supervision__summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .services-supervision__title {
-      margin: 0;
-      font-size: 2.1rem;
-      font-weight: 600;
-    }
-
-    .services-supervision__summary-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      border: 1px solid currentColor;
-      font-size: 20px;
-      line-height: 1;
-      transition: transform 0.2s ease;
-    }
-
-    .services-supervision__details[open] .services-supervision__summary-icon {
-      transform: rotate(45deg);
-    }
-
-    .services-supervision__text {
-      margin-top: 16px;
-    }
-  </style>
 </head>
 <body class="page">
   <a class="skip-link" href="#main-content">Перейти к основному содержимому</a>
@@ -129,8 +65,8 @@
           <h1 id="hero-title" class="hero__title">Продуманный интерьер, в котором удобно жить каждый день.</h1>
           <p class="hero__lead">Разрабатываем дизайн-проекты под ключ: от концепции и 3D визуализации до комплектации и авторского надзора.</p>
           <div class="hero__actions">
-            <a class="btn btn--primary js-open-consult" href="#consult-modal" tabindex="0" aria-label="Получить консультацию" aria-haspopup="dialog">Получить консультацию</a>
-            <a class="btn btn--secondary" href="#portfolio" tabindex="0" aria-label="Смотреть проекты">Смотреть проекты</a>
+            <a class="btn btn--primary js-open-consult" href="#consult-modal" aria-label="Получить консультацию" aria-haspopup="dialog">Получить консультацию</a>
+            <a class="btn btn--secondary" href="#portfolio" aria-label="Смотреть проекты">Смотреть проекты</a>
           </div>
         </div>
       </div>
@@ -147,16 +83,16 @@
                 <img src="assets/service-01.png" alt="Дизайн-проект 1700 руб./кв. м, оплата частями" width="400" height="520" loading="lazy" decoding="async">
               </picture>
             </div>
-            <a class="btn btn--primary services-grid__btn js-open-included" href="#" tabindex="0" aria-label="Что входит в проект — тариф 1700 руб./кв. м" data-included-src="assets/included-tariff-01.png" data-included-alt="Что входит в стоимость — тариф 1700 руб./кв. м">Что входит в проект</a>
+            <a class="btn btn--primary services-grid__btn js-open-included" href="#" aria-label="Что входит в проект — тариф 1700 руб./кв. м" data-included-src="assets/included-tariff-01.png" data-included-alt="Что входит в стоимость — тариф 1700 руб./кв. м">Что входит в проект</a>
           </div>
           <div class="services-grid__item">
             <div class="services-grid__card">
               <picture>
-                <source type="image/webp" srcset="assets/service-02.webp?v=2">
-                <img src="assets/service-02.png?v=2" alt="Дизайн-проект 2100 руб./кв. м, оплата частями" width="400" height="520" loading="lazy" decoding="async">
+                <source type="image/webp" srcset="assets/service-02.webp">
+                <img src="assets/service-02.png" alt="Дизайн-проект 2100 руб./кв. м, оплата частями" width="400" height="520" loading="lazy" decoding="async">
               </picture>
             </div>
-            <a class="btn btn--primary services-grid__btn js-open-included" href="#" tabindex="0" aria-label="Что входит в проект — тариф 2100 руб./кв. м" data-included-src="assets/included-tariff-02.png" data-included-alt="Что входит в стоимость — тариф 2100 руб./кв. м">Что входит в проект</a>
+            <a class="btn btn--primary services-grid__btn js-open-included" href="#" aria-label="Что входит в проект — тариф 2100 руб./кв. м" data-included-src="assets/included-tariff-02.png" data-included-alt="Что входит в стоимость — тариф 2100 руб./кв. м">Что входит в проект</a>
           </div>
           <div class="services-grid__item">
             <div class="services-grid__card">
@@ -165,7 +101,7 @@
                 <img src="assets/service-03.png" alt="Дизайн-проект 2700 руб./кв. м, оплата частями" width="400" height="520" loading="lazy" decoding="async">
               </picture>
             </div>
-            <a class="btn btn--primary services-grid__btn js-open-included" href="#" tabindex="0" aria-label="Что входит в проект — тариф 2700 руб./кв. м" data-included-src="assets/included-tariff-03.png" data-included-alt="Что входит в стоимость — тариф 2700 руб./кв. м">Что входит в проект</a>
+            <a class="btn btn--primary services-grid__btn js-open-included" href="#" aria-label="Что входит в проект — тариф 2700 руб./кв. м" data-included-src="assets/included-tariff-03.png" data-included-alt="Что входит в стоимость — тариф 2700 руб./кв. м">Что входит в проект</a>
           </div>
           <div class="services-grid__item">
             <div class="services-grid__card">
@@ -174,7 +110,7 @@
                 <img src="assets/service-04.png" alt="Дизайн-проект 3000 руб./кв. м, оплата частями" width="400" height="520" loading="lazy" decoding="async">
               </picture>
             </div>
-            <a class="btn btn--primary services-grid__btn js-open-included" href="#" tabindex="0" aria-label="Что входит в проект — тариф 3000 руб./кв. м" data-included-src="assets/included-tariff-04.png" data-included-alt="Что входит в стоимость — тариф 3000 руб./кв. м">Что входит в проект</a>
+            <a class="btn btn--primary services-grid__btn js-open-included" href="#" aria-label="Что входит в проект — тариф 3000 руб./кв. м" data-included-src="assets/included-tariff-04.png" data-included-alt="Что входит в стоимость — тариф 3000 руб./кв. м">Что входит в проект</a>
           </div>
         </div>
         <div class="services-supervision">
@@ -237,7 +173,7 @@
             </div>
           </div>
           <div class="services-supervision__actions">
-            <a class="btn btn--primary js-open-consult" href="#consult-modal" tabindex="0" aria-label="Получить консультацию" aria-haspopup="dialog">Получить консультацию</a>
+            <a class="btn btn--primary js-open-consult" href="#consult-modal" aria-label="Получить консультацию" aria-haspopup="dialog">Получить консультацию</a>
           </div>
         </div>
       </div>

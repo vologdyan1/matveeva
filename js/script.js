@@ -138,10 +138,12 @@ if (navLinks.length > 0 && sections.length > 0) {
  * Валидация и маска телефона общие для обеих форм.
  */
 const CONSULT_MODAL_ID = "consult-modal";
-const INVALID_CLASS = "form-input--invalid";
+const INVALID_CLASS_INPUT = "consult-form__input--invalid";
+const INVALID_CLASS_CHECKBOX = "consult-form__checkbox--invalid";
 const PHONE_PLACEHOLDER = "+79999999999";
 
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+// Ключ виден в клиенте. Для продакшена: ограничьте домен в dashboard Web3Forms; при наличии бэкенда подставляйте ключ на сервере.
 const WEB3FORMS_ACCESS_KEY = "e6f55808-55b4-452b-91bf-e4ceb94651ed";
 const SUBMIT_BTN_LABEL_DEFAULT = "Свяжитесь со мной";
 const SUBMIT_BTN_LABEL_SENDING = "Отправка…";
@@ -165,9 +167,9 @@ const isPhoneValid = (value) => {
   return value.startsWith("+7") && digits.length >= 11;
 };
 
-const setInvalid = (el, invalid) => {
+const setInvalid = (el, invalid, invalidClass = INVALID_CLASS_INPUT) => {
   if (!el) return;
-  el.classList.toggle(INVALID_CLASS, invalid);
+  el.classList.toggle(invalidClass, invalid);
   el.setAttribute("aria-invalid", invalid ? "true" : "false");
 };
 
@@ -210,7 +212,7 @@ const initConsultForm = (config) => {
   const validateAndMark = () => {
     setInvalid(nameInput, !isNameValid(nameInput?.value ?? ""));
     setInvalid(phoneInput, !isPhoneValid(phoneInput?.value ?? ""));
-    setInvalid(consentCheckbox, !(consentCheckbox?.checked === true));
+    setInvalid(consentCheckbox, !(consentCheckbox?.checked === true), INVALID_CLASS_CHECKBOX);
   };
 
   const handleNameInput = (e) => {
@@ -226,12 +228,11 @@ const initConsultForm = (config) => {
 
   const handlePhoneInput = (e) => {
     const el = e.target;
-    let val = el.value;
+    let val = el.value.replace(/[^\d+]/g, "");
     if (val.startsWith("8")) val = "+7" + val.slice(1);
-    val = val.replace(/[^\d+]/g, "");
     if (val.length > 1 && !val.startsWith("+")) val = "+7" + val.replace(/^7?/, "");
     if (val === "+" || val === "") val = "";
-    else if (val.length > 0 && val[0] !== "+") val = "+7" + val.replace(/^7?/, "");
+    else if (val[0] !== "+") val = "+7" + val.replace(/^7?/, "");
     el.value = val;
     setInvalid(el, false);
     updateSubmitButton();
@@ -317,7 +318,7 @@ const openModal = (triggerEl) => {
   const consentCheckbox = document.getElementById("consult-consent");
   setInvalid(nameInput, false);
   setInvalid(phoneInput, false);
-  setInvalid(consentCheckbox, false);
+  setInvalid(consentCheckbox, false, INVALID_CLASS_CHECKBOX);
   const submitBtn = form?.querySelector(".consult-form__submit");
   if (submitBtn) {
     const nameOk = isNameValid(nameInput?.value ?? "");
@@ -327,7 +328,7 @@ const openModal = (triggerEl) => {
   }
   modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
-  closeBtn?.focus();
+  (nameInput ?? closeBtn)?.focus();
 };
 
 const closeModal = () => {
@@ -386,7 +387,8 @@ initConsultForm({
 /**
  * Лайтбокс галереи проекта: приближение фото по клику.
  */
-const lightbox = document.getElementById("gallery-lightbox");
+const GALLERY_LIGHTBOX_ID = "gallery-lightbox";
+const lightbox = document.getElementById(GALLERY_LIGHTBOX_ID);
 const projectGallerySection = document.querySelector(".section.project-gallery");
 
 if (lightbox && projectGallerySection) {
@@ -412,7 +414,8 @@ if (lightbox && projectGallerySection) {
     const img = e.currentTarget.querySelector("img");
     if (!img?.src) return;
     e.preventDefault();
-    openLightbox(img.src, img.alt);
+    const src = img.currentSrc || img.src;
+    openLightbox(src, img.alt);
   };
 
   galleryItems.forEach((item) => {
@@ -440,19 +443,19 @@ if (servicesLightbox) {
   const lightboxNavNext = servicesLightbox.querySelector(".lightbox__nav--next");
   let currentCarouselIndex = -1;
 
+  const LIGHTBOX_NAV_HIDDEN_CLASS = "lightbox__nav--hidden";
+
   const showCarouselNav = (show) => {
     const hidden = !show;
     if (lightboxNavPrev) {
       lightboxNavPrev.setAttribute("aria-hidden", hidden);
-      lightboxNavPrev.style.display = show ? "" : "none";
+      lightboxNavPrev.classList.toggle(LIGHTBOX_NAV_HIDDEN_CLASS, !show);
     }
     if (lightboxNavNext) {
       lightboxNavNext.setAttribute("aria-hidden", hidden);
-      lightboxNavNext.style.display = show ? "" : "none";
+      lightboxNavNext.classList.toggle(LIGHTBOX_NAV_HIDDEN_CLASS, !show);
     }
   };
-
-  const LIGHTBOX_IMAGES_BASE = "assets/carousel-lightbox/";
 
   const showCarouselImage = (index) => {
     const items = window.__CAROUSEL_ITEMS || [];
@@ -465,11 +468,11 @@ if (servicesLightbox) {
     servicesLightboxImg.onload = () => servicesLightbox.classList.remove("lightbox--loading");
     servicesLightboxImg.onerror = () => {
       servicesLightboxImg.onerror = null;
-      servicesLightboxImg.src = item.src;
+      servicesLightbox.classList.remove("lightbox--loading");
     };
-    servicesLightboxImg.src = LIGHTBOX_IMAGES_BASE + String(index).padStart(2, "0") + ".webp";
-    if (lightboxNavPrev) lightboxNavPrev.style.visibility = index > 0 ? "" : "hidden";
-    if (lightboxNavNext) lightboxNavNext.style.visibility = index < items.length - 1 ? "" : "hidden";
+    servicesLightboxImg.src = CAROUSEL_LIGHTBOX_BASE + String(index).padStart(2, "0") + ".webp";
+    if (lightboxNavPrev) lightboxNavPrev.classList.toggle(LIGHTBOX_NAV_HIDDEN_CLASS, index <= 0);
+    if (lightboxNavNext) lightboxNavNext.classList.toggle(LIGHTBOX_NAV_HIDDEN_CLASS, index >= items.length - 1);
   };
 
   const openServicesLightbox = (src, alt, carouselIndex) => {
@@ -484,8 +487,8 @@ if (servicesLightbox) {
       servicesLightboxImg.alt = alt ?? "";
       servicesLightboxImg.onload = () => servicesLightbox.classList.remove("lightbox--loading");
       servicesLightboxImg.src = src;
-      if (lightboxNavPrev) lightboxNavPrev.style.visibility = "";
-      if (lightboxNavNext) lightboxNavNext.style.visibility = "";
+      if (lightboxNavPrev) lightboxNavPrev.classList.remove(LIGHTBOX_NAV_HIDDEN_CLASS);
+      if (lightboxNavNext) lightboxNavNext.classList.remove(LIGHTBOX_NAV_HIDDEN_CLASS);
     }
     servicesLightbox.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
@@ -500,7 +503,7 @@ if (servicesLightbox) {
   };
 
   if (lightboxNavPrev) {
-    lightboxNavPrev.style.display = "none";
+    lightboxNavPrev.classList.add(LIGHTBOX_NAV_HIDDEN_CLASS);
     lightboxNavPrev.addEventListener("click", (e) => {
       e.stopPropagation();
       if (currentCarouselIndex <= 0) return;
@@ -508,7 +511,7 @@ if (servicesLightbox) {
     });
   }
   if (lightboxNavNext) {
-    lightboxNavNext.style.display = "none";
+    lightboxNavNext.classList.add(LIGHTBOX_NAV_HIDDEN_CLASS);
     lightboxNavNext.addEventListener("click", (e) => {
       e.stopPropagation();
       const items = window.__CAROUSEL_ITEMS || [];
@@ -589,35 +592,36 @@ if (servicesLightbox) {
 }
 
 /**
- * Карусель «Пример готового проекта»: данные слайдов (подписи из названий файлов).
+ * Карусель «Пример готового проекта»: подписи слайдов. URL строится по индексу: assets/carousel-thumbs/ и CAROUSEL_LIGHTBOX_BASE.
  */
+const CAROUSEL_LIGHTBOX_BASE = "assets/carousel-lightbox/";
 const CAROUSEL_ITEMS = [
-  { src: "assets/1 обмерный план.png", caption: "1 обмерный план" },
-  { src: "assets/2 Схема демонтажа перегородок.png", caption: "2 Схема демонтажа перегородок" },
-  { src: "assets/2.1 Схема монтажа перегородок.png", caption: "2.1 Схема монтажа перегородок" },
-  { src: "assets/3 План расстановки мебели.png", caption: "3 План расстановки мебели" },
-  { src: "assets/4 Схема сантехники.png", caption: "4 Схема сантехники" },
-  { src: "assets/4.1 Схема сантехники.png", caption: "4.1 Схема сантехники" },
-  { src: "assets/4х- комнатная квартира - 4.12.25_Page18.png", caption: "4х- комнатная квартира - 4.12.25_Page18" },
-  { src: "assets/5 Схема потолков.png", caption: "5 Схема потолков" },
-  { src: "assets/6 Схема напольных покрытий.png", caption: "6 Схема напольных покрытий" },
-  { src: "assets/7 Схема светильников.png", caption: "7 Схема светильников" },
-  { src: "assets/8 Схема розеток.png", caption: "8 Схема розеток" },
-  { src: "assets/9 Ведомость светильников.png", caption: "9 Ведомость светильников" },
-  { src: "assets/10 Спецификация розеточных блоков.png", caption: "10 Спецификация розеточных блоков" },
-  { src: "assets/11 Схема отделки стен.png", caption: "11 Схема отделки стен" },
-  { src: "assets/12 Развертки по стенам коридора.png", caption: "12 Развертки по стенам коридора" },
-  { src: "assets/12.1 Развертки стен коридора 2.png", caption: "12.1 Развертки стен коридора 2" },
-  { src: "assets/13 Развертки по стенам кухни гостиной.png", caption: "13 Развертки по стенам кухни гостиной" },
-  { src: "assets/13.1 Размервертки по стенам кухни гостиной 2.png", caption: "13.1 Размервертки по стенам кухни гостиной 2" },
-  { src: "assets/14 Развертки по стенам спальни.png", caption: "14 Развертки по стенам спальни" },
-  { src: "assets/15 Развертки по стенам детской 1.png", caption: "15 Развертки по стенам детской 1" },
-  { src: "assets/15.1 Развертки по стенам детской 2.png", caption: "15.1 Развертки по стенам детской 2" },
-  { src: "assets/16 развертки по стенам душевой.png", caption: "16 развертки по стенам душевой" },
-  { src: "assets/16.1 Развертки по стенам ванной.png", caption: "16.1 Развертки по стенам ванной" },
-  { src: "assets/17 Ведомость заполнения дверных проемов.png", caption: "17 Ведомость заполнения дверных проемов" },
-  { src: "assets/18 Сводная ведомость отделки потолка и стен 1.png", caption: "18 Сводная ведомость отделки потолка и стен 1" },
-  { src: "assets/18.1 Сводная ведомость отделки потолка и стен 2.png", caption: "18.1 Сводная ведомость отделки потолка и стен 2" },
+  { caption: "1 обмерный план" },
+  { caption: "2 Схема демонтажа перегородок" },
+  { caption: "2.1 Схема монтажа перегородок" },
+  { caption: "3 План расстановки мебели" },
+  { caption: "4 Схема сантехники" },
+  { caption: "4.1 Схема сантехники" },
+  { caption: "4.2 Сантех привязка кондиционеров" },
+  { caption: "5 Схема потолков" },
+  { caption: "6 Схема напольных покрытий" },
+  { caption: "7 Схема светильников" },
+  { caption: "8 Схема розеток" },
+  { caption: "9 Ведомость светильников" },
+  { caption: "10 Спецификация розеточных блоков" },
+  { caption: "11 Схема отделки стен" },
+  { caption: "12 Развертки по стенам коридора" },
+  { caption: "12.1 Развертки стен коридора 2" },
+  { caption: "13 Развертки по стенам кухни гостиной" },
+  { caption: "13.1 Развертки по стенам кухни гостиной 2" },
+  { caption: "14 Развертки по стенам спальни" },
+  { caption: "15 Развертки по стенам детской 1" },
+  { caption: "15.1 Развертки по стенам детской 2" },
+  { caption: "16 развертки по стенам душевой" },
+  { caption: "16.1 Развертки по стенам ванной" },
+  { caption: "17 Ведомость заполнения дверных проемов" },
+  { caption: "18 Сводная ведомость отделки потолка и стен 1" },
+  { caption: "18.1 Сводная ведомость отделки потолка и стен 2" },
 ];
 window.__CAROUSEL_ITEMS = CAROUSEL_ITEMS;
 
@@ -653,7 +657,7 @@ if (carousel) {
       btn.className = "portfolio-carousel__thumb js-carousel-lightbox";
       btn.setAttribute("tabindex", "0");
       btn.setAttribute("aria-label", "Открыть фото: " + captionEsc);
-      btn.setAttribute("data-full-src", item.src);
+      btn.setAttribute("data-full-src", CAROUSEL_LIGHTBOX_BASE + String(index).padStart(2, "0") + ".webp");
       btn.setAttribute("data-carousel-index", String(index));
       const img = document.createElement("img");
       img.dataset.src = thumbSrc;
