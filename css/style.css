@@ -327,7 +327,7 @@ h1, h2, h3 {
 .hero__bg {
   position: absolute;
   inset: 0;
-  background-image: url("../assets/hero-bg.jpg");
+  background-image: url("../assets/projects/project-01/08.png");
   background-size: cover;
   background-position: center;
   filter: blur(4px);
@@ -587,6 +587,41 @@ h1, h2, h3 {
   font-size: 0.9375rem;
   line-height: 1.6;
   color: var(--text-muted);
+}
+
+.services-supervision__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  margin-bottom: 0.4rem;
+}
+
+.services-supervision__row:last-child {
+  margin-bottom: 0;
+}
+
+.services-supervision__row-icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: 0.2em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.services-supervision__row-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.services-supervision__row p {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
 }
 
 .services-supervision__actions {
