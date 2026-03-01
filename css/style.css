@@ -475,6 +475,10 @@ h1, h2, h3 {
 }
 
 /* ===== Services (4 тарифа по ширине) ===== */
+#services {
+  scroll-margin-top: -3rem;
+}
+
 .services .section__title {
   margin-bottom: 1.5rem;
   text-align: center;
