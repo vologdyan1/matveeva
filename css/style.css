@@ -349,7 +349,8 @@ h1, h2, h3 {
 .hero__bg {
   position: absolute;
   inset: 0;
-  background-image: url("../assets/projects/project-01/08.webp"), url("../assets/projects/project-01/08.png");
+  /* WebP only: fallback PNG removed to avoid double fetch (target browsers support WebP) */
+  background-image: url("../assets/projects/project-01/08.webp");
   background-size: cover;
   background-position: center;
   filter: blur(4px);
@@ -916,13 +917,9 @@ h1, h2, h3 {
 
 .portfolio-carousel__dot:hover,
 .portfolio-carousel__dot:focus-visible {
-  transform: scale(1.25);
-}
-
-.portfolio-carousel__dot:hover,
-.portfolio-carousel__dot:focus-visible {
   background: #999;
   outline: none;
+  transform: scale(1.25);
 }
 
 .portfolio-carousel__dot[aria-selected="true"] {

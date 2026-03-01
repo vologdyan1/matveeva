@@ -36,141 +36,148 @@ const CAROUSEL_ITEMS = [
 ];
 window.__CAROUSEL_ITEMS = CAROUSEL_ITEMS;
 
-const header = document.querySelector(".page-header");
-const burger = document.querySelector(".page-header__burger");
-const nav = document.getElementById("page-header-nav");
+const init = () => {
+  const header = document.querySelector(".page-header");
+  const burger = document.querySelector(".page-header__burger");
+  const nav = document.getElementById("page-header-nav");
 
-const isMenuOpen = () => header?.classList.contains("page-header--menu-open");
+  const isMenuOpen = () => header?.classList.contains("page-header--menu-open");
 
-const closeMobileMenu = () => {
-  if (!header) return;
-  header.classList.remove("page-header--menu-open");
-  burger?.setAttribute("aria-expanded", "false");
-  burger?.setAttribute("aria-label", "Открыть меню");
-  document.body.style.overflow = "";
-};
+  const closeMobileMenu = () => {
+    if (!header) return;
+    header.classList.remove("page-header--menu-open");
+    burger?.setAttribute("aria-expanded", "false");
+    burger?.setAttribute("aria-label", "Открыть меню");
+    document.body.style.overflow = "";
+  };
 
-const openMobileMenu = () => {
-  if (!header) return;
-  header.classList.add("page-header--menu-open");
-  burger?.setAttribute("aria-expanded", "true");
-  burger?.setAttribute("aria-label", "Закрыть меню");
-  document.body.style.overflow = "hidden";
-};
+  const openMobileMenu = () => {
+    if (!header) return;
+    header.classList.add("page-header--menu-open");
+    burger?.setAttribute("aria-expanded", "true");
+    burger?.setAttribute("aria-label", "Закрыть меню");
+    document.body.style.overflow = "hidden";
+  };
 
-const handleBurgerClick = () => {
-  if (isMenuOpen()) closeMobileMenu();
-  else openMobileMenu();
-};
+  const handleBurgerClick = () => {
+    if (isMenuOpen()) closeMobileMenu();
+    else openMobileMenu();
+  };
 
-const handleBurgerKeyDown = (e) => {
-  if (e.key !== "Enter" && e.key !== " ") return;
-  e.preventDefault();
-  handleBurgerClick();
-};
+  const handleBurgerKeyDown = (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    handleBurgerClick();
+  };
 
-if (burger) {
-  burger.addEventListener("click", handleBurgerClick);
-  burger.addEventListener("keydown", handleBurgerKeyDown);
-}
-
-const HEADER_OFFSET_PX = () =>
-  header?.offsetHeight ?? parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-height") || "80", 10);
-
-const scrollToSection = (id) => {
-  const section = document.getElementById(id);
-  if (!section) return;
-  const title = section.querySelector(".section__title") || section;
-  const top = title.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET_PX();
-  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-};
-
-const handleSectionLinkClick = (e) => {
-  const href = e.currentTarget.getAttribute("href") || "";
-  const id = href.slice(1);
-  if (!SECTION_IDS.includes(id)) return;
-  e.preventDefault();
-  closeMobileMenu();
-  requestAnimationFrame(() => requestAnimationFrame(() => scrollToSection(id)));
-};
-
-document.querySelectorAll(".nav-list__link[href^='#']").forEach((link) => {
-  const id = (link.getAttribute("href") || "").slice(1);
-  if (SECTION_IDS.includes(id)) link.addEventListener("click", handleSectionLinkClick);
-});
-
-document.querySelectorAll(".page-footer__nav-link[href^='#']").forEach((link) => {
-  const id = (link.getAttribute("href") || "").slice(1);
-  if (SECTION_IDS.includes(id)) {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      scrollToSection(id);
-    });
+  if (burger) {
+    burger.addEventListener("click", handleBurgerClick);
+    burger.addEventListener("keydown", handleBurgerKeyDown);
   }
-});
 
-/** Подсветка пункта навигации при скролле до привязанной секции. */
-const NAV_LINK_ACTIVE_CLASS = "nav-list__link--active";
-const SECTION_SELECTOR = "[id='hero'], [id='services'], [id='portfolio'], [id='about'], [id='contacts']";
+  const HEADER_OFFSET_PX = () =>
+    header?.offsetHeight ?? parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-height") || "80", 10);
 
-const navLinks = document.querySelectorAll(".nav-list__link[href^='#']");
-const sections = document.querySelectorAll(SECTION_SELECTOR);
+  /** Доп. отступ для scroll-spy (порог входа секции в «видимую» зону). */
+  const SCROLL_SPY_OFFSET_PX = 80;
 
-if (navLinks.length > 0 && sections.length > 0) {
-  const sectionIds = Array.from(sections).map((section) => section.id);
-
-  const setActiveLink = (activeId) => {
-    navLinks.forEach((link) => {
-      const href = link.getAttribute("href");
-      const targetId = href ? href.slice(1) : "";
-      if (targetId === activeId) {
-        link.classList.add(NAV_LINK_ACTIVE_CLASS);
-        link.setAttribute("aria-current", "location");
-      } else {
-        link.classList.remove(NAV_LINK_ACTIVE_CLASS);
-        link.removeAttribute("aria-current");
-      }
-    });
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (!section) return;
+    const title = section.querySelector(".section__title") || section;
+    const top = title.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET_PX();
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   };
 
-  const getVisibleSectionId = () => {
-    const headerHeight = document.querySelector(".page-header")?.offsetHeight ?? 80;
-    const offset = headerHeight + 80;
-    const scrollY = window.scrollY || window.pageYOffset;
-    const atBottom =
-      scrollY + window.innerHeight >= document.documentElement.scrollHeight - offset;
+  const handleSectionLinkClick = (e) => {
+    const href = e.currentTarget.getAttribute("href") || "";
+    const id = href.slice(1);
+    if (!SECTION_IDS.includes(id)) return;
+    e.preventDefault();
+    closeMobileMenu();
+    requestAnimationFrame(() => requestAnimationFrame(() => scrollToSection(id)));
+  };
 
-    let currentId = sectionIds[0];
-    for (let i = sections.length - 1; i >= 0; i--) {
-      const section = sections[i];
-      const top = section.getBoundingClientRect().top + scrollY;
-      if (scrollY >= top - offset) {
-        currentId = section.id;
-        break;
-      }
+  document.querySelectorAll(".nav-list__link[href^='#']").forEach((link) => {
+    const id = (link.getAttribute("href") || "").slice(1);
+    if (SECTION_IDS.includes(id)) link.addEventListener("click", handleSectionLinkClick);
+  });
+
+  document.querySelectorAll(".page-footer__nav-link[href^='#']").forEach((link) => {
+    const id = (link.getAttribute("href") || "").slice(1);
+    if (SECTION_IDS.includes(id)) {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        scrollToSection(id);
+      });
     }
-    if (atBottom && sectionIds.length > 0) {
-      currentId = sectionIds[sectionIds.length - 1];
-    }
-    return currentId;
-  };
+  });
 
-  const handleScroll = () => {
-    setActiveLink(getVisibleSectionId());
-  };
+  /** Throttle скролла для scroll-spy (мс). */
+  const SCROLL_THROTTLE_MS = 120;
+  /** Debounce resize для карусели (мс). */
+  const CAROUSEL_RESIZE_DEBOUNCE_MS = 150;
 
-  const throttleMs = 120;
-  let scrollScheduled = false;
-  const handleScrollThrottled = () => {
-    if (scrollScheduled) return;
-    scrollScheduled = true;
+  /** Подсветка пункта навигации при скролле до привязанной секции. */
+  const NAV_LINK_ACTIVE_CLASS = "nav-list__link--active";
+  const SECTION_SELECTOR = "[id='hero'], [id='services'], [id='portfolio'], [id='about'], [id='contacts']";
+
+  const navLinks = document.querySelectorAll(".nav-list__link[href^='#']");
+  const sections = document.querySelectorAll(SECTION_SELECTOR);
+
+  if (navLinks.length > 0 && sections.length > 0) {
+    const sectionIds = Array.from(sections).map((section) => section.id);
+
+    const setActiveLink = (activeId) => {
+      navLinks.forEach((link) => {
+        const href = link.getAttribute("href");
+        const targetId = href ? href.slice(1) : "";
+        if (targetId === activeId) {
+          link.classList.add(NAV_LINK_ACTIVE_CLASS);
+          link.setAttribute("aria-current", "location");
+        } else {
+          link.classList.remove(NAV_LINK_ACTIVE_CLASS);
+          link.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    const getVisibleSectionId = () => {
+      const offset = HEADER_OFFSET_PX() + SCROLL_SPY_OFFSET_PX;
+      const scrollY = window.scrollY || window.pageYOffset;
+      const atBottom =
+        scrollY + window.innerHeight >= document.documentElement.scrollHeight - offset;
+
+      let currentId = sectionIds[0];
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        const top = section.getBoundingClientRect().top + scrollY;
+        if (scrollY >= top - offset) {
+          currentId = section.id;
+          break;
+        }
+      }
+      if (atBottom && sectionIds.length > 0) {
+        currentId = sectionIds[sectionIds.length - 1];
+      }
+      return currentId;
+    };
+
+    const handleScroll = () => {
+      setActiveLink(getVisibleSectionId());
+    };
+
+    let scrollScheduled = false;
+    const handleScrollThrottled = () => {
+      if (scrollScheduled) return;
+      scrollScheduled = true;
+      handleScroll();
+      setTimeout(() => { scrollScheduled = false; }, SCROLL_THROTTLE_MS);
+    };
+
+    window.addEventListener("scroll", handleScrollThrottled, { passive: true });
     handleScroll();
-    setTimeout(() => { scrollScheduled = false; }, throttleMs);
-  };
-
-  window.addEventListener("scroll", handleScrollThrottled, { passive: true });
-  handleScroll();
-}
+  }
 
 /**
  * Модальное окно формы консультации и формы в блоке Контакты.
@@ -573,6 +580,10 @@ if (servicesLightbox) {
     }
   };
 
+  const updateLightboxDialogLabel = (label) => {
+    servicesLightbox.setAttribute("aria-label", label);
+  };
+
   const showCarouselImage = (index) => {
     const items = window.__CAROUSEL_ITEMS || [];
     if (index < 0 || index >= items.length) return;
@@ -580,13 +591,16 @@ if (servicesLightbox) {
     const item = items[index];
     if (!item || !servicesLightboxImg) return;
     servicesLightbox.classList.add("lightbox--loading");
-    servicesLightboxImg.alt = item.caption ?? "";
+    const caption = item.caption ?? "";
+    servicesLightboxImg.alt = caption;
     servicesLightboxImg.onload = () => servicesLightbox.classList.remove("lightbox--loading");
     servicesLightboxImg.onerror = () => {
       servicesLightboxImg.onerror = null;
       servicesLightbox.classList.remove("lightbox--loading");
     };
     servicesLightboxImg.src = CAROUSEL_LIGHTBOX_BASE + String(index).padStart(2, "0") + ".webp";
+    const label = `Слайд ${index + 1} из ${items.length}${caption ? ": " + caption : ""}`;
+    updateLightboxDialogLabel(label);
     if (lightboxNavPrev) lightboxNavPrev.classList.toggle(LIGHTBOX_NAV_HIDDEN_CLASS, index <= 0);
     if (lightboxNavNext) lightboxNavNext.classList.toggle(LIGHTBOX_NAV_HIDDEN_CLASS, index >= items.length - 1);
   };
@@ -601,9 +615,11 @@ if (servicesLightbox) {
       showCarouselImage(carouselIndex);
     } else {
       servicesLightbox.classList.add("lightbox--loading");
-      servicesLightboxImg.alt = alt ?? "";
+      const singleAlt = alt?.trim() || "Что входит в проект";
+      servicesLightboxImg.alt = singleAlt;
       servicesLightboxImg.onload = () => servicesLightbox.classList.remove("lightbox--loading");
       servicesLightboxImg.src = src;
+      updateLightboxDialogLabel(singleAlt);
       /* Для одиночного фото (кнопки «Что входит в проект») стрелки не показываем */
     }
     servicesLightbox.setAttribute("aria-hidden", "false");
@@ -611,9 +627,11 @@ if (servicesLightbox) {
     setBackdropInert(servicesLightbox);
     if (servicesFocusTrapCleanup) servicesFocusTrapCleanup();
     servicesFocusTrapCleanup = setupFocusTrap(servicesLightbox, servicesLightboxClose);
+    window.addEventListener("keydown", handleLightboxKeydown);
   };
 
   const closeServicesLightbox = () => {
+    window.removeEventListener("keydown", handleLightboxKeydown);
     if (servicesFocusTrapCleanup) {
       servicesFocusTrapCleanup(servicesLightboxTrigger);
       servicesFocusTrapCleanup = null;
@@ -655,8 +673,6 @@ if (servicesLightbox) {
       if (currentCarouselIndex < items.length - 1) showCarouselImage(currentCarouselIndex + 1);
     }
   };
-  window.addEventListener("keydown", handleLightboxKeydown);
-
   /** Кнопки «Что входит в проект» — открывают лайтбокс с картинкой по data-included-src. */
   const openIncludedBtns = document.querySelectorAll(".js-open-included");
   const handleOpenIncludedClick = (e) => {
@@ -845,11 +861,10 @@ if (carousel) {
       });
     });
 
-    const resizeDebounceMs = 150;
     let resizeTimeout = null;
     window.addEventListener("resize", () => {
       if (resizeTimeout) clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(updateTransform, resizeDebounceMs);
+      resizeTimeout = setTimeout(updateTransform, CAROUSEL_RESIZE_DEBOUNCE_MS);
     });
 
     updateTransform();
@@ -868,13 +883,20 @@ if (carousel) {
   whenInView.observe(carousel);
 }
 
-/** Один глобальный обработчик Escape для всех модалок и лайтбоксов. */
-window.addEventListener("keydown", (e) => {
-  if (e.key !== "Escape") return;
-  for (const h of ESCAPE_CLOSE_REGISTRY) {
-    if (h.isOpen()) {
-      h.close();
-      break;
+  /** Один глобальный обработчик Escape для всех модалок и лайтбоксов. */
+  window.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    for (const h of ESCAPE_CLOSE_REGISTRY) {
+      if (h.isOpen()) {
+        h.close();
+        break;
+      }
     }
-  }
-});
+  });
+};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}

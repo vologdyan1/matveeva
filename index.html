@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <!-- Yandex.Metrika counter -->
-  <script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=107058101', 'ym');
-
-    ym(107058101, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-  </script>
-  <noscript><div><img src="https://mc.yandex.ru/watch/107058101" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-  <!-- /Yandex.Metrika counter -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Дизайн интерьеров — услуги дизайнера</title>
@@ -40,12 +27,12 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/MD-16x16.png">
   <link rel="apple-touch-icon" href="assets/MD-180x180.png" sizes="180x180">
 
-  <!-- Preload hero убран: на медленном мобильном связке сначала грузим документ и CSS -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" as="style">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap"></noscript>
   <link rel="preload" href="css/style.min.css" as="style">
+  <link rel="preload" href="assets/projects/project-01/08.webp" as="image">
   <link rel="stylesheet" href="css/style.min.css">
 </head>
 <body class="page">
@@ -392,9 +379,9 @@
     </div>
   </footer>
 
-  <div id="services-lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Увеличить фото" aria-hidden="true">
+  <div id="services-lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр изображения" aria-hidden="true">
     <div class="lightbox__backdrop" aria-hidden="true"></div>
-    <img class="lightbox__img" src="" alt="">
+    <img class="lightbox__img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/%3E" alt="" role="presentation">
     <button type="button" class="lightbox__nav lightbox__nav--prev" aria-label="Предыдущее фото" aria-hidden="true"></button>
     <button type="button" class="lightbox__nav lightbox__nav--next" aria-label="Следующее фото" aria-hidden="true"></button>
     <button type="button" class="lightbox__close" aria-label="Закрыть"></button>
@@ -426,6 +413,19 @@
     </div>
   </div>
 
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=107058101', 'ym');
+
+    ym(107058101, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/107058101" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <!-- /Yandex.Metrika counter -->
   <script src="js/script.min.js" defer></script>
 </body>
 </html>
