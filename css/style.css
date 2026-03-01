@@ -321,8 +321,6 @@ h1, h2, h3 {
   min-height: 85vh;
   display: flex;
   align-items: center;
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
   overflow: hidden;
 }
 
@@ -476,7 +474,24 @@ h1, h2, h3 {
 
 /* ===== Services (4 тарифа по ширине) ===== */
 #services {
-  scroll-margin-top: -3rem;
+  scroll-margin-top: var(--header-height);
+}
+
+/* Визуально hero заканчивается фоном; нижний padding hero «внутри» блока. Удваиваем верхний отступ Услуг, чтобы зазор до заголовка был как у остальных секций. */
+.services.section {
+  padding-top: 3rem;
+}
+
+@media (min-width: 768px) {
+  .services.section {
+    padding-top: 4.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .services.section {
+    padding-top: 5.5rem;
+  }
 }
 
 .services .section__title {

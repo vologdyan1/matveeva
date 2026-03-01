@@ -41,9 +41,15 @@ if (burger) {
   burger.addEventListener("keydown", handleBurgerKeyDown);
 }
 
+const HEADER_OFFSET_PX = () =>
+  header?.offsetHeight ?? parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-height") || "80", 10);
+
 const scrollToSection = (id) => {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  const section = document.getElementById(id);
+  if (!section) return;
+  const title = section.querySelector(".section__title") || section;
+  const top = title.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET_PX();
+  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
 };
 
 const handleSectionLinkClick = (e) => {
@@ -52,7 +58,7 @@ const handleSectionLinkClick = (e) => {
   if (!SECTION_IDS.includes(id)) return;
   e.preventDefault();
   closeMobileMenu();
-  scrollToSection(id);
+  requestAnimationFrame(() => requestAnimationFrame(() => scrollToSection(id)));
 };
 
 document.querySelectorAll(".nav-list__link[href^='#']").forEach((link) => {
