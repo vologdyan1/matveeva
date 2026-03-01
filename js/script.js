@@ -3,6 +3,39 @@
  * Плавная прокрутка к секциям по клику на якорные ссылки (в шапке и футере).
  */
 const SECTION_IDS = ["hero", "services", "portfolio", "about", "contacts"];
+
+/** Карусель «Пример готового проекта»: подписи слайдов. URL строится по индексу: assets/carousel-thumbs/ и CAROUSEL_LIGHTBOX_BASE. */
+const CAROUSEL_LIGHTBOX_BASE = "assets/carousel-lightbox/";
+const CAROUSEL_ITEMS = [
+  { caption: "1 обмерный план" },
+  { caption: "2 Схема демонтажа перегородок" },
+  { caption: "2.1 Схема монтажа перегородок" },
+  { caption: "3 План расстановки мебели" },
+  { caption: "4 Схема сантехники" },
+  { caption: "4.1 Схема сантехники" },
+  { caption: "4.2 Сантех привязка кондиционеров" },
+  { caption: "5 Схема потолков" },
+  { caption: "6 Схема напольных покрытий" },
+  { caption: "7 Схема светильников" },
+  { caption: "8 Схема розеток" },
+  { caption: "9 Ведомость светильников" },
+  { caption: "10 Спецификация розеточных блоков" },
+  { caption: "11 Схема отделки стен" },
+  { caption: "12 Развертки по стенам коридора" },
+  { caption: "12.1 Развертки стен коридора 2" },
+  { caption: "13 Развертки по стенам кухни гостиной" },
+  { caption: "13.1 Развертки по стенам кухни гостиной 2" },
+  { caption: "14 Развертки по стенам спальни" },
+  { caption: "15 Развертки по стенам детской 1" },
+  { caption: "15.1 Развертки по стенам детской 2" },
+  { caption: "16 развертки по стенам душевой" },
+  { caption: "16.1 Развертки по стенам ванной" },
+  { caption: "17 Ведомость заполнения дверных проемов" },
+  { caption: "18 Сводная ведомость отделки потолка и стен 1" },
+  { caption: "18.1 Сводная ведомость отделки потолка и стен 2" },
+];
+window.__CAROUSEL_ITEMS = CAROUSEL_ITEMS;
+
 const header = document.querySelector(".page-header");
 const burger = document.querySelector(".page-header__burger");
 const nav = document.getElementById("page-header-nav");
@@ -159,6 +192,57 @@ const openBtns = document.querySelectorAll(".js-open-consult");
 const backdrop = modal?.querySelector(".modal__backdrop");
 const closeBtn = modal?.querySelector(".modal__close");
 let lastOpenTrigger = null;
+let modalFocusTrapCleanup = null;
+
+const FOCUSABLE_SELECTOR = "button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex=\"-1\"])";
+
+const getFocusableElements = (container) => {
+  if (!container) return [];
+  return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR)).filter((el) => {
+    return el.getAttribute("aria-hidden") !== "true" && el.offsetParent !== null;
+  });
+};
+
+const setupFocusTrap = (container, initialFocus) => {
+  const previousActive = document.activeElement;
+  const handleKeyDown = (e) => {
+    if (e.key !== "Tab") return;
+    if (container.getAttribute("aria-hidden") !== "false") return;
+    const focusables = getFocusableElements(container);
+    if (focusables.length === 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const current = document.activeElement;
+    const idx = focusables.indexOf(current);
+    let nextIdx;
+    if (idx === -1) {
+      nextIdx = 0;
+    } else if (e.shiftKey) {
+      nextIdx = idx <= 0 ? focusables.length - 1 : idx - 1;
+    } else {
+      nextIdx = idx >= focusables.length - 1 ? 0 : idx + 1;
+    }
+    focusables[nextIdx].focus();
+  };
+  document.addEventListener("keydown", handleKeyDown, true);
+  const first = (initialFocus && container.contains(initialFocus) ? initialFocus : getFocusableElements(container)[0]);
+  first?.focus();
+  return (returnFocusTo) => {
+    document.removeEventListener("keydown", handleKeyDown, true);
+    (returnFocusTo ?? previousActive)?.focus?.();
+  };
+};
+
+const setBackdropInert = (activeOverlay) => {
+  Array.from(document.body.children).forEach((child) => {
+    if (child !== activeOverlay) child.setAttribute("inert", "");
+    else child.removeAttribute("inert");
+  });
+};
+
+const clearBackdropInert = () => {
+  Array.from(document.body.children).forEach((child) => child.removeAttribute("inert"));
+};
 
 const onlyLettersRegex = /[^\p{L}\s]/gu;
 
@@ -334,14 +418,20 @@ const openModal = (triggerEl) => {
   }
   modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
-  (nameInput ?? closeBtn)?.focus();
+  setBackdropInert(modal);
+  if (modalFocusTrapCleanup) modalFocusTrapCleanup();
+  modalFocusTrapCleanup = setupFocusTrap(modal, nameInput ?? closeBtn);
 };
 
 const closeModal = () => {
   if (!modal) return;
+  if (modalFocusTrapCleanup) {
+    modalFocusTrapCleanup(lastOpenTrigger);
+    modalFocusTrapCleanup = null;
+  }
   modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
-  lastOpenTrigger?.focus?.();
+  clearBackdropInert();
 };
 
 if (openBtns.length > 0) {
@@ -402,18 +492,29 @@ if (lightbox && projectGallerySection) {
   const lightboxBackdrop = lightbox.querySelector(".lightbox__backdrop");
   const lightboxClose = lightbox.querySelector(".lightbox__close");
   const galleryItems = projectGallerySection.querySelectorAll(".project-gallery__item");
+  let galleryLightboxTrigger = null;
+  let galleryFocusTrapCleanup = null;
 
-  const openLightbox = (src, alt) => {
+  const openLightbox = (src, alt, triggerEl) => {
     lightboxImg.src = src;
     lightboxImg.alt = alt ?? "";
+    galleryLightboxTrigger = triggerEl ?? null;
     lightbox.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
-    lightboxClose?.focus();
+    setBackdropInert(lightbox);
+    if (galleryFocusTrapCleanup) galleryFocusTrapCleanup();
+    galleryFocusTrapCleanup = setupFocusTrap(lightbox, lightboxClose);
   };
 
   const closeLightbox = () => {
+    if (galleryFocusTrapCleanup) {
+      galleryFocusTrapCleanup(galleryLightboxTrigger);
+      galleryFocusTrapCleanup = null;
+    }
+    galleryLightboxTrigger = null;
     lightbox.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+    clearBackdropInert();
   };
 
   const handleItemClick = (e) => {
@@ -421,11 +522,18 @@ if (lightbox && projectGallerySection) {
     if (!img?.src) return;
     e.preventDefault();
     const src = img.currentSrc || img.src;
-    openLightbox(src, img.alt);
+    openLightbox(src, img.alt, e.currentTarget);
   };
 
   galleryItems.forEach((item) => {
+    item.setAttribute("tabindex", "0");
     item.addEventListener("click", handleItemClick);
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        item.click();
+      }
+    });
   });
 
   lightboxBackdrop?.addEventListener("click", closeLightbox);
@@ -448,6 +556,8 @@ if (servicesLightbox) {
   const lightboxNavPrev = servicesLightbox.querySelector(".lightbox__nav--prev");
   const lightboxNavNext = servicesLightbox.querySelector(".lightbox__nav--next");
   let currentCarouselIndex = -1;
+  let servicesLightboxTrigger = null;
+  let servicesFocusTrapCleanup = null;
 
   const LIGHTBOX_NAV_HIDDEN_CLASS = "lightbox__nav--hidden";
 
@@ -481,9 +591,10 @@ if (servicesLightbox) {
     if (lightboxNavNext) lightboxNavNext.classList.toggle(LIGHTBOX_NAV_HIDDEN_CLASS, index >= items.length - 1);
   };
 
-  const openServicesLightbox = (src, alt, carouselIndex) => {
+  const openServicesLightbox = (src, alt, carouselIndex, triggerEl) => {
     if (!servicesLightboxImg) return;
     currentCarouselIndex = carouselIndex ?? -1;
+    servicesLightboxTrigger = triggerEl ?? null;
     const isCarousel = typeof carouselIndex === "number" && carouselIndex >= 0;
     showCarouselNav(isCarousel);
     if (isCarousel) {
@@ -493,19 +604,26 @@ if (servicesLightbox) {
       servicesLightboxImg.alt = alt ?? "";
       servicesLightboxImg.onload = () => servicesLightbox.classList.remove("lightbox--loading");
       servicesLightboxImg.src = src;
-      if (lightboxNavPrev) lightboxNavPrev.classList.remove(LIGHTBOX_NAV_HIDDEN_CLASS);
-      if (lightboxNavNext) lightboxNavNext.classList.remove(LIGHTBOX_NAV_HIDDEN_CLASS);
+      /* Для одиночного фото (кнопки «Что входит в проект») стрелки не показываем */
     }
     servicesLightbox.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
-    servicesLightboxClose?.focus();
+    setBackdropInert(servicesLightbox);
+    if (servicesFocusTrapCleanup) servicesFocusTrapCleanup();
+    servicesFocusTrapCleanup = setupFocusTrap(servicesLightbox, servicesLightboxClose);
   };
 
   const closeServicesLightbox = () => {
+    if (servicesFocusTrapCleanup) {
+      servicesFocusTrapCleanup(servicesLightboxTrigger);
+      servicesFocusTrapCleanup = null;
+    }
+    servicesLightboxTrigger = null;
     servicesLightbox.setAttribute("aria-hidden", "true");
     servicesLightbox.classList.remove("lightbox--loading");
     currentCarouselIndex = -1;
     document.body.style.overflow = "";
+    clearBackdropInert();
   };
 
   if (lightboxNavPrev) {
@@ -547,7 +665,7 @@ if (servicesLightbox) {
     const alt = btn.getAttribute("data-included-alt") ?? "";
     if (src) {
       e.preventDefault();
-      openServicesLightbox(src, alt);
+      openServicesLightbox(src, alt, undefined, btn);
     }
   };
 
@@ -558,7 +676,7 @@ if (servicesLightbox) {
     const alt = btn.getAttribute("data-included-alt") ?? "";
     if (src) {
       e.preventDefault();
-      openServicesLightbox(src, alt);
+      openServicesLightbox(src, alt, undefined, btn);
     }
   };
 
@@ -586,7 +704,7 @@ if (servicesLightbox) {
       const index = indexStr !== null ? parseInt(indexStr, 10) : -1;
       if (src) {
         e.preventDefault();
-        openServicesLightbox(src, alt, index);
+        openServicesLightbox(src, alt, index, btn);
       }
     };
     carouselContainer.addEventListener("click", handleCarouselLightbox);
@@ -596,40 +714,6 @@ if (servicesLightbox) {
     });
   }
 }
-
-/**
- * Карусель «Пример готового проекта»: подписи слайдов. URL строится по индексу: assets/carousel-thumbs/ и CAROUSEL_LIGHTBOX_BASE.
- */
-const CAROUSEL_LIGHTBOX_BASE = "assets/carousel-lightbox/";
-const CAROUSEL_ITEMS = [
-  { caption: "1 обмерный план" },
-  { caption: "2 Схема демонтажа перегородок" },
-  { caption: "2.1 Схема монтажа перегородок" },
-  { caption: "3 План расстановки мебели" },
-  { caption: "4 Схема сантехники" },
-  { caption: "4.1 Схема сантехники" },
-  { caption: "4.2 Сантех привязка кондиционеров" },
-  { caption: "5 Схема потолков" },
-  { caption: "6 Схема напольных покрытий" },
-  { caption: "7 Схема светильников" },
-  { caption: "8 Схема розеток" },
-  { caption: "9 Ведомость светильников" },
-  { caption: "10 Спецификация розеточных блоков" },
-  { caption: "11 Схема отделки стен" },
-  { caption: "12 Развертки по стенам коридора" },
-  { caption: "12.1 Развертки стен коридора 2" },
-  { caption: "13 Развертки по стенам кухни гостиной" },
-  { caption: "13.1 Развертки по стенам кухни гостиной 2" },
-  { caption: "14 Развертки по стенам спальни" },
-  { caption: "15 Развертки по стенам детской 1" },
-  { caption: "15.1 Развертки по стенам детской 2" },
-  { caption: "16 развертки по стенам душевой" },
-  { caption: "16.1 Развертки по стенам ванной" },
-  { caption: "17 Ведомость заполнения дверных проемов" },
-  { caption: "18 Сводная ведомость отделки потолка и стен 1" },
-  { caption: "18.1 Сводная ведомость отделки потолка и стен 2" },
-];
-window.__CAROUSEL_ITEMS = CAROUSEL_ITEMS;
 
 const CAROUSEL_PLACEHOLDER =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect fill='%23eaeaea' width='400' height='300'/%3E%3C/svg%3E";
