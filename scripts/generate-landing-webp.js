@@ -17,6 +17,10 @@ const LANDING_IMAGES = [
   "assets/designer.png",
   "assets/designer-02.png",
   "assets/projects/project-01/08.png", // hero фон
+  "assets/included-tariff-01.png",
+  "assets/included-tariff-02.png",
+  "assets/included-tariff-03.png",
+  "assets/included-tariff-04.png",
 ];
 
 const WEBP_QUALITY = 88;
