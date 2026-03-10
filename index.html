@@ -66,18 +66,36 @@
 
   <main id="main-content" class="page-main">
     <section id="hero" class="hero section" aria-labelledby="hero-title">
-      <div class="hero__bg" aria-hidden="true"></div>
-      <div class="container hero__container">
-        <div class="hero__content">
+      <div class="hero__grid">
+        <div class="hero__left">
           <h1 id="hero-title" class="hero__title">Продуманный интерьер, в котором удобно жить каждый день.</h1>
+          <div class="hero__actions">
+            <a class="btn btn--hero-primary js-open-consult" href="#consult-modal" aria-label="Получить консультацию"
+              aria-haspopup="dialog">Получить консультацию&nbsp;&nbsp;→</a>
+            <a class="btn btn--hero-secondary" href="#portfolio" aria-label="Смотреть проекты">Смотреть
+              проекты&nbsp;&nbsp;→</a>
+          </div>
           <p class="hero__lead">Разрабатываем дизайн-проекты под ключ: от концепции и 3D визуализации до комплектации и
             авторского надзора.</p>
-          <div class="hero__actions">
-            <a class="btn btn--primary js-open-consult" href="#consult-modal" aria-label="Получить консультацию"
-              aria-haspopup="dialog">Получить консультацию</a>
-            <a class="btn btn--secondary" href="#portfolio" aria-label="Смотреть проекты">Смотреть проекты</a>
+
+        </div>
+        <div class="hero__right">
+          <span class="hero__tagline">Дизайн интерьеров<br>более 12 лет опыта</span>
+          <div class="hero__image-wrapper">
+            <picture>
+              <source type="image/webp" srcset="assets/projects/project-01/08.webp">
+              <img class="hero__image" src="assets/projects/project-01/08.png"
+                alt="Стильный интерьер — пример реализованного проекта" width="640" height="480" loading="eager">
+            </picture>
           </div>
         </div>
+        <a class="hero__scroll-down" href="#services" aria-label="Листать вниз">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <polyline points="19 12 12 19 5 12"></polyline>
+          </svg>
+        </a>
       </div>
     </section>
 
@@ -570,6 +588,7 @@
     <div><img src="https://mc.yandex.ru/watch/107058101" style="position:absolute; left:-9999px;" alt="" /></div>
   </noscript>
   <!-- /Yandex.Metrika counter -->
+  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js" defer></script>
   <script src="js/script.min.js" defer></script>
 </body>
 

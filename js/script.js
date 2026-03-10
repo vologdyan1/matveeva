@@ -82,7 +82,11 @@ const init = () => {
     if (!section) return;
     const title = section.querySelector(".section__title") || section;
     const top = title.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET_PX();
-    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    if (window.lenis) {
+      window.lenis.scrollTo(Math.max(0, top));
+    } else {
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    }
   };
 
   const handleSectionLinkClick = (e) => {
@@ -108,6 +112,15 @@ const init = () => {
       });
     }
   });
+
+  // Hero scroll-down arrow → same scroll logic as nav links
+  const heroScrollDown = document.querySelector(".hero__scroll-down");
+  if (heroScrollDown) {
+    heroScrollDown.addEventListener("click", (e) => {
+      e.preventDefault();
+      scrollToSection("services");
+    });
+  }
 
   /** Throttle скролла для scroll-spy (мс). */
   const SCROLL_THROTTLE_MS = 120;
@@ -926,6 +939,70 @@ const init = () => {
       }
     }
   });
+
+  // Initialize Lenis Smooth Scrolling
+  if (typeof Lenis !== 'undefined') {
+    window.lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+    });
+
+    // GSAP Integration if available
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      window.lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        window.lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      function raf(time) {
+        window.lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+    }
+  }
+
+  // GSAP ScrollTrigger for project gallery items
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray(".project-gallery__item").forEach((item) => {
+      // Create a masking container effect
+      item.style.overflow = "hidden";
+
+      const img = item.querySelector("img");
+      if (img) {
+        // Define parallax movement value
+        const yOffset = 50;
+
+        // Initial state before we start scrubbing
+        gsap.set(img, {
+          y: -yOffset,
+          scale: 1.15, // Scale up slightly to prevent edges showing during movement
+          transformOrigin: "center center"
+        });
+
+        // The parallax animation
+        gsap.to(img, {
+          y: yOffset,
+          ease: "none", // linear movement for scrub
+          scrollTrigger: {
+            trigger: item,
+            start: "top bottom", // when the top of the container hits the bottom of the viewport
+            end: "bottom top",   // when the bottom of the container hits the top of the viewport
+            scrub: true          // Link animation specifically to scroll progress
+          }
+        });
+      }
+    });
+  }
 };
 
 if (document.readyState === "loading") {
