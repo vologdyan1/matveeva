@@ -9,6 +9,8 @@
     "build": "npm run landing-webp && npm run projects-webp && npm run minify"
   },
   "devDependencies": {
-    "sharp": "^0.33.5"
+    "clean-css-cli": "^5.6.3",
+    "sharp": "^0.33.5",
+    "terser": "^5.46.0"
   }
 }
