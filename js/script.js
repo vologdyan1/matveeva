@@ -969,40 +969,52 @@ const init = () => {
     }
   }
 
-  // GSAP ScrollTrigger for project gallery items
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
+  // Pinterest-style Masonry Grid
+  const initMasonryGrid = () => {
+    const masonries = document.querySelectorAll('.project-gallery__masonry, .project-gallery__before');
+    if (!masonries.length) return;
 
-    gsap.utils.toArray(".project-gallery__item").forEach((item) => {
-      // Create a masking container effect
-      item.style.overflow = "hidden";
+    const resizeMasonry = () => {
+      masonries.forEach(masonry => {
+        masonry.classList.add('is-grid');
+        const items = masonry.querySelectorAll('.project-gallery__item');
+        const vw = window.innerWidth;
+        const gap = vw >= 1200 ? 20 : (vw >= 480 ? 16 : 12);
 
-      const img = item.querySelector("img");
-      if (img) {
-        // Define parallax movement value
-        const yOffset = 50;
+        items.forEach(item => {
+          item.style.gridRowEnd = 'auto';
+          const img = item.querySelector('img');
+          let h = item.getBoundingClientRect().height;
 
-        // Initial state before we start scrubbing
-        gsap.set(img, {
-          y: -yOffset,
-          scale: 1.15, // Scale up slightly to prevent edges showing during movement
-          transformOrigin: "center center"
-        });
+          if (h === 0 && img) {
+            const attrH = parseFloat(img.getAttribute('height'));
+            const attrW = parseFloat(img.getAttribute('width'));
+            if (attrH && attrW) {
+              const w = item.getBoundingClientRect().width;
+              if (w) h = w * (attrH / attrW);
+            }
+          }
 
-        // The parallax animation
-        gsap.to(img, {
-          y: yOffset,
-          ease: "none", // linear movement for scrub
-          scrollTrigger: {
-            trigger: item,
-            start: "top bottom", // when the top of the container hits the bottom of the viewport
-            end: "bottom top",   // when the bottom of the container hits the top of the viewport
-            scrub: true          // Link animation specifically to scroll progress
+          if (h > 0) {
+            item.style.gridRowEnd = `span ${Math.ceil((h + gap) / 5)}`;
           }
         });
-      }
+      });
+    };
+
+    resizeMasonry();
+    window.addEventListener('resize', () => requestAnimationFrame(resizeMasonry));
+
+    masonries.forEach(masonry => {
+      masonry.querySelectorAll('img').forEach(img => {
+        if (!img.complete) {
+          img.addEventListener('load', resizeMasonry);
+        }
+      });
     });
-  }
+  };
+
+  initMasonryGrid();
 };
 
 if (document.readyState === "loading") {
