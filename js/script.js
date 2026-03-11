@@ -153,7 +153,7 @@ const init = () => {
 
     const getVisibleSectionId = () => {
       const offset = HEADER_OFFSET_PX() + SCROLL_SPY_OFFSET_PX;
-      const scrollY = window.scrollY || window.pageYOffset;
+      const scrollY = window.scrollY;
       const atBottom =
         scrollY + window.innerHeight >= document.documentElement.scrollHeight - offset;
 
@@ -825,10 +825,9 @@ const init = () => {
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "portfolio-carousel__dot";
-          btn.setAttribute("role", "tab");
           btn.setAttribute("aria-label", "Слайд " + (index + 1));
           btn.setAttribute("data-index", String(index));
-          btn.setAttribute("aria-selected", index === 0 ? "true" : "false");
+          btn.setAttribute("aria-current", index === 0 ? "true" : "false");
           dotsContainer.appendChild(btn);
         }
       }
@@ -858,7 +857,7 @@ const init = () => {
         currentIndex = Math.max(0, Math.min(index, maxIndex));
         updateTransform();
         dots.forEach((dot, i) => {
-          dot.setAttribute("aria-selected", i === currentIndex ? "true" : "false");
+          dot.setAttribute("aria-current", i === currentIndex ? "true" : "false");
         });
       };
 
@@ -961,10 +960,10 @@ const init = () => {
       });
       gsap.ticker.lagSmoothing(0);
     } else {
-      function raf(time) {
+      const raf = (time) => {
         window.lenis.raf(time);
         requestAnimationFrame(raf);
-      }
+      };
       requestAnimationFrame(raf);
     }
   }
